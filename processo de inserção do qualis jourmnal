@@ -1,0 +1,34 @@
+
+1 lerQualis()
+	1.2  readQualis() 
+
+2 addQualisJournalsArea("String",ano)
+
+	2.1 validateIssn()
+		
+		2.1.1 cria objetos AreaClassification
+		2.1.2 cria objetos QualisJournal
+
+3 createSetIssn()
+
+4 addQualisComputerScience()
+
+5 selectJournalsToDB()
+
+6 addAttributesQualis()
+
+7 QualisDAO.insert()
+
+8 QualisDAO.update();
+
+
+1 lerQualis()
+	1.2  readQualis() altera
+
+2 addQualisJournalsArea("String",ano) alterar
+
+	2.1 validateIssn() alterar
+		
+		2.1.1 cria objetos AreaClassification alterar
+		2.1.2 cria objetos QualisJournal alterar
+

@@ -1,0 +1,33 @@
+
+
+Se é o título existir na base
+
+	Verificar se à área existe
+	Se à área existir
+		get id da área
+	Se à área não existir 
+		inserir a nova área
+		get id da área		
+	
+	get qualis pelo id_pub_venue e pelo id_area
+	
+	Se o qualis não for igual
+		Atualizar o qualis e atualizar o ano
+	
+	Se o qualis for igual
+		Atualizar o ano;
+
+Se o título não existir na base
+	
+	Inserir o título
+
+	Verificar se à área existe
+	Se à área existir
+		get id da área
+	Se à área não existir 
+		inserir a nova área.
+		get id da área
+	
+	Atualizar o qualis e atualizar o ano
+
+
