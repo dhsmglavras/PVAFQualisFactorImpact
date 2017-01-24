@@ -82,7 +82,6 @@ public class ReadQualisJournal {
                                 
                     array = a2.getContents().getBytes("UTF-8");
                     String title = new String(array,"UTF-8");
-                    title = title.toUpperCase();
                     title = title.replaceAll(";","");
                     title = title.trim();
                                 

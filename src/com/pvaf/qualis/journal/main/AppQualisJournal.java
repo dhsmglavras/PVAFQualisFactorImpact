@@ -246,7 +246,7 @@ public class AppQualisJournal {
         switch(op){
             
             case 1:
-                //AppQualisJournal.deleteFile("registroErro.xls");
+                AppQualisJournal.deleteFile("registroErro.xls");
                 
                 Set<String> setJournalsQualis = AppQualisJournal.lerQualis("qualis-journal-todas-as-areas-2015.xls",op);
                 
@@ -296,7 +296,7 @@ public class AppQualisJournal {
                 setJournalsQualis = AppQualisJournal.lerQualis("registroErro.xls",op);
                 
                 listQualisJournals = AppQualisJournal.processQualisJournalsArea(setJournalsQualis,2015,op);
-                System.out.println(listQualisJournals.size());
+                //System.out.println(listQualisJournals.size());
                 setIssnJa = AppQualisJournal.createSetIssn(listQualisJournals);
         
                 setIssnCs = AppQualisJournal.addQualisComputerScience(IssnDAO.issnDB());
