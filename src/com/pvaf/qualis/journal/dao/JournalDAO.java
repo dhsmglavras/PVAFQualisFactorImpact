@@ -17,8 +17,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -202,7 +200,7 @@ public class JournalDAO {
             }
             conn.commit();           
 	}catch(SQLException e){
-            System.err.println( "B Ocorreu uma exceção de SQL. Causa: " + e.getMessage() );
+            System.err.println( "Ocorreu uma exceção de SQL. Causa: " + e.getMessage() );
             if(conn !=null){
 		try{
                     conn.rollback();
@@ -337,7 +335,7 @@ public class JournalDAO {
             }
             conn.commit();
         }catch(SQLException e){
-            System.err.println( "A Ocorreu uma exceção de SQL. Causa: " + e.getMessage());
+            System.err.println( "Ocorreu uma exceção de SQL. Causa: " + e.getMessage());
             if(conn !=null){
 		try{
                     conn.rollback();
