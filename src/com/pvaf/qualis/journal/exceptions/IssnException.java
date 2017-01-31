@@ -222,10 +222,13 @@ public class IssnException extends Exception{
             System.err.println("Erro em escrever no arquivo. Causa: " + ex.getMessage());
         }
     }
-    
+        
     public boolean fileExist(){
         File file = new File("registroErro.xls");
-        return file.exists();
+        if(this.numero==1){
+            return false;
+        }
+        return true;        
     }
         
     @Override
