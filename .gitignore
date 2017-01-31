@@ -4,3 +4,5 @@ QualisJournal_1/
 *.class
 # Para sql
 *.sql
+# Para build/
+build/
