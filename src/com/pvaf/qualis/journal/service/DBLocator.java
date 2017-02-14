@@ -8,6 +8,7 @@ package com.pvaf.qualis.journal.service;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -15,15 +16,17 @@ import java.sql.SQLException;
  */
 public class DBLocator {
     
+    private final static Logger log = Logger.getLogger(DBLocator.class);
+    
     static{
         try{
-            DriverManager.registerDriver(new com.mysql.jdbc.Driver());			
-	}catch(SQLException e){
-            System.err.println("Erro ao registrar Driver JDBC MySql. Causa: " + e.getMessage());
+            DriverManager.registerDriver(new com.mysql.jdbc.NonRegisteringDriver());			
+	}catch(Exception e){
+            log.error("Erro ao registrar Driver JDBC MySql.", e.fillInStackTrace());
 	}		
     }
 	
-    public static java.sql.Connection getConnection() throws SQLException{
+    public static java.sql.Connection getConnection() throws SQLException, Exception{
         Login login = new Login();
 	Connection conn; 
 	conn = DriverManager.getConnection(login.getUrl(), login.getUser(), login.getPassword());

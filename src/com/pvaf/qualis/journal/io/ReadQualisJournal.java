@@ -8,16 +8,14 @@ package com.pvaf.qualis.journal.io;
 import java.io.FileNotFoundException;
 import java.util.Set;
 import java.util.TreeSet;
-
 import java.io.File;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import jxl.Cell;
 import jxl.Sheet;
 import jxl.Workbook;
 import jxl.WorkbookSettings;
 import jxl.read.biff.BiffException;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -25,8 +23,10 @@ import jxl.read.biff.BiffException;
  */
 public class ReadQualisJournal {
     
+    private final static Logger log = Logger.getLogger(ReadQualisJournal.class);
+    
     private final String path;
-    private Set<String> journalsQualis = new TreeSet<>();
+    private final Set<String> journalsQualis = new TreeSet<>();
     
     public ReadQualisJournal(String path){
         this.path = path;
@@ -46,7 +46,7 @@ public class ReadQualisJournal {
         return this.journalsQualis;
     }
        
-    public void redQualis()  {
+    public void redQualis() throws Exception {
         
         try{
             File file = new File(path);
@@ -101,16 +101,18 @@ public class ReadQualisJournal {
             }
             workbook.close();            
         }catch(FileNotFoundException f){
-            System.err.println( "Arq. nao existe. Causa: " + f.getMessage() );
+            log.error("Arq. nao existe.",f.fillInStackTrace());
+            throw new Exception("Ocorreu um Erro Interno");
 	}catch (IOException e){
-            System.err.println( "Erro de E/S. Causa: " + e.getMessage() );
-	} catch (BiffException ex) {		
-            Logger.getLogger(ReadQualisJournal.class.getName()).log(Level.SEVERE, null, ex);
-            System.err.println("Erro de Leitura do arquivo biff. Causa: " + ex.getMessage());
-        }		
+            log.error("Erro de E/S.",e.fillInStackTrace());
+            throw new Exception("Ocorreu um Erro Interno");
+	} catch (BiffException ex) {
+            log.error("Erro de Leitura do arquivo biff.", ex.fillInStackTrace());
+            throw new Exception("Ocorreu um Erro Interno");
+        }
     }
 
-    public void redQualisInvalidIssn()  {
+    public void redQualisInvalidIssn() throws Exception{
         
         try{
             File file = new File(path);
@@ -129,7 +131,7 @@ public class ReadQualisJournal {
                 Cell cell = sheet.findCell("ISSN");
 
                 cell.getRow();
-                
+
                 for (int i = cell.getRow() + 1; i < linhas; i++) {
                     
                     int column = cell.getColumn();
@@ -165,20 +167,22 @@ public class ReadQualisJournal {
                     String classification = new String(array,"UTF-8");
                     classification = classification.replaceAll(";","");
                     classification = classification.trim();
-                                
+                    
                     String line = issn+";"+issnInvalid+";"+title+";"+area+";"+classification;
                     journalsQualis.add(line);
                 }
             }
-            workbook.close();            
+            workbook.close();
             
         }catch(FileNotFoundException f){
-            System.err.println( "Arq. nao existe. Causa: " + f.getMessage() );
+            log.error("Arq. nao existe.", f.fillInStackTrace());
+            throw new Exception("Ocorreu um Erro Interno");
 	}catch (IOException e){
-            System.err.println( "Erro de E/S. Causa: " + e.getMessage() );
-	} catch (BiffException ex) {		
-            Logger.getLogger(ReadQualisJournal.class.getName()).log(Level.SEVERE, null, ex);
-            System.err.println("Erro de Leitura do arquivo biff. Causa: " + ex.getMessage());
-        }		
+            log.error("Erro de E/S.", e.fillInStackTrace());
+            throw new Exception("Ocorreu um Erro Interno");
+	} catch (BiffException ex) {
+            log.error("Erro de Leitura do arquivo biff.", ex.fillInStackTrace());
+            throw new Exception("Ocorreu um Erro Interno");
+        }
     }
 }

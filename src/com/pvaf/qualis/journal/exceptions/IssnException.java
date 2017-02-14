@@ -6,11 +6,7 @@
 package com.pvaf.qualis.journal.exceptions;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import jxl.Workbook;
 import jxl.read.biff.BiffException;
 import jxl.write.Label;
@@ -18,7 +14,7 @@ import jxl.write.WritableCell;
 import jxl.write.WritableSheet;
 import jxl.write.WritableWorkbook;
 import jxl.write.WriteException;
-
+import org.apache.log4j.Logger;
 /**
  *
  * @author marte
@@ -27,17 +23,17 @@ public class IssnException extends Exception{
     
     private static int  autoIncremento = 1;
     private final int numero;
-    private String line;
-    private File file;
-    private FileWriter out;
-    private PrintWriter writer;
+    private final String line;
     
+    private final static Logger log = Logger.getLogger(IssnException.class);
+                
     public IssnException(String line){
         this.line = line;
         this.numero = autoIncremento++;
     }
             
-    public void log(){
+    public void log() throws Exception{
+        
         try {
             
             Label label;
@@ -58,7 +54,7 @@ public class IssnException extends Exception{
                     aba.addCell(label);
                 }
                 
-                String line[] = this.line.split(";");
+                String atributos[] = this.line.split(";");
                 int cont =0;
                 
                 int linha = numero;
@@ -66,16 +62,16 @@ public class IssnException extends Exception{
                 label = new Label(0, linha, null);
                 aba.addCell(label);
 
-                label = new Label(1, linha, line[0]);
+                label = new Label(1, linha, atributos[0]);
                 aba.addCell(label);
 
-                label = new Label(2, linha, line[1]);
+                label = new Label(2, linha, atributos[1]);
                 aba.addCell(label);
 
-                label = new Label(3, linha, line[2]);
+                label = new Label(3, linha, atributos[2]);
                 aba.addCell(label);
 
-                label = new Label(4, linha, line[3]);
+                label = new Label(4, linha, atributos[3]);
                 aba.addCell(label);
                 
                 planilha.write();
@@ -92,25 +88,25 @@ public class IssnException extends Exception{
                     WritableCell cell;
                     
                     int linha = numero;
-                    String line[] = this.line.split(";");
+                    String atributos[] = this.line.split(";");
                     
                     label = new Label(0, linha, null);
                     cell = (WritableCell) label;
                     aba.addCell(cell);
 
-                    label = new Label(1, linha, line[0]);
+                    label = new Label(1, linha, atributos[0]);
                     cell = (WritableCell) label;
                     aba.addCell(cell);
 
-                    label = new Label(2, linha, line[1]);
+                    label = new Label(2, linha, atributos[1]);
                     cell = (WritableCell) label;
                     aba.addCell(cell);
 
-                    label = new Label(3, linha, line[2]);
+                    label = new Label(3, linha, atributos[2]);
                     cell = (WritableCell) label;
                     aba.addCell(cell);
 
-                    label = new Label(4, linha, line[3]);
+                    label = new Label(4, linha, atributos[3]);
                     cell = (WritableCell) label;
                     aba.addCell(cell);
                     
@@ -119,18 +115,21 @@ public class IssnException extends Exception{
                     copyPlanilha.close();
                     
                 } catch (BiffException ex) {
-                    Logger.getLogger(IssnException.class.getName()).log(Level.SEVERE, null, ex);
+                    log.error("Erro de Leitura do arquivo biff.", ex.fillInStackTrace());
+                    throw new Exception("Ocorreu um Erro Interno");
                 }
             }
             
         } catch (IOException e) {
-            System.err.println("Erro de E/S. Causa: " + e.getMessage());
-        } catch (WriteException ex){
-            System.err.println("Erro em escrever no arquivo. Causa: " + ex.getMessage());
+            log.error("Erro de E/S.", e.fillInStackTrace());
+            throw new Exception("Ocorreu um Erro Interno");
+        } catch (WriteException e){
+            log.error("Erro em escrever no arquivo.", e.fillInStackTrace());
+            throw new Exception("Ocorreu um Erro Interno");
         }
     }
     
-    public void log2(){
+    public void log2() throws Exception{
         try {
             
             Label label;
@@ -151,23 +150,23 @@ public class IssnException extends Exception{
                     aba.addCell(label);
                 }
                 
-                String line[] = this.line.split(";");
+                String atributos[] = this.line.split(";");
                 
                 int linha = numero;
                 
-                label = new Label(0, linha, line[0]);
+                label = new Label(0, linha, atributos[0]);
                 aba.addCell(label);
 
-                label = new Label(1, linha, line[1]);
+                label = new Label(1, linha, atributos[1]);
                 aba.addCell(label);
 
-                label = new Label(2, linha, line[2]);
+                label = new Label(2, linha, atributos[2]);
                 aba.addCell(label);
 
-                label = new Label(3, linha, line[3]);
+                label = new Label(3, linha, atributos[3]);
                 aba.addCell(label);
 
-                label = new Label(4, linha, line[4]);
+                label = new Label(4, linha, atributos[4]);
                 aba.addCell(label);
                 
                 planilha.write();
@@ -184,26 +183,25 @@ public class IssnException extends Exception{
                     WritableCell cell;
                     
                     int linha = numero;
-                    String line[] = this.line.split(";");
+                    String atributos[] = this.line.split(";");
                     
-                    label = new Label(0, linha, line[0]);
+                    label = new Label(0, linha, atributos[0]);
                     cell = (WritableCell) label;
                     aba.addCell(cell);
-
                     
-                    label = new Label(1, linha, line[1]);
+                    label = new Label(1, linha, atributos[1]);
                     cell = (WritableCell) label;
                     aba.addCell(cell);
 
-                    label = new Label(2, linha, line[2]);
+                    label = new Label(2, linha, atributos[2]);
                     cell = (WritableCell) label;
                     aba.addCell(cell);
 
-                    label = new Label(3, linha, line[3]);
+                    label = new Label(3, linha, atributos[3]);
                     cell = (WritableCell) label;
                     aba.addCell(cell);
 
-                    label = new Label(4, linha, line[4]);
+                    label = new Label(4, linha, atributos[4]);
                     cell = (WritableCell) label;
                     aba.addCell(cell);
                     
@@ -212,14 +210,17 @@ public class IssnException extends Exception{
                     copyPlanilha.close();
                     
                 } catch (BiffException ex) {
-                    Logger.getLogger(IssnException.class.getName()).log(Level.SEVERE, null, ex);
+                    log.error("Erro de Leitura do arquivo biff.", ex.fillInStackTrace());
+                    throw new Exception("Ocorreu um Erro Interno");
                 }
             }
             
         } catch (IOException e) {
-            System.err.println("Erro de E/S. Causa: " + e.getMessage());
-        } catch (WriteException ex){
-            System.err.println("Erro em escrever no arquivo. Causa: " + ex.getMessage());
+            log.error("Erro de E/S.", e.fillInStackTrace());
+            throw new Exception("Ocorreu um Erro Interno");
+        } catch (WriteException e) {
+            log.error("Erro em escrever no arquivo.", e.fillInStackTrace());
+            throw new Exception("Ocorreu um Erro Interno");
         }
     }
         

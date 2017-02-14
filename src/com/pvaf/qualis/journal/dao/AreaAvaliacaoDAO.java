@@ -13,6 +13,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -20,7 +21,9 @@ import java.util.List;
  */
 public class AreaAvaliacaoDAO {
     
-    public static List<AreaAvaliacao> getAllNamesAreaAvaliacao(){
+    private final static Logger log = Logger.getLogger(AreaAvaliacaoDAO.class);
+    
+    public static List<AreaAvaliacao> getAllNamesAreaAvaliacao() throws Exception {
         List<AreaAvaliacao> listA = new ArrayList<>();
         
         try(Connection conn = DBLocator.getConnection();
@@ -33,7 +36,8 @@ public class AreaAvaliacaoDAO {
                 listA.add(area);
             }
 	}catch(SQLException e){
-            System.err.println("Ocorreu uma exceção de SQL. Causa: " + e.getMessage());
+            log.error("Ocorreu uma exceção de SQL.", e.fillInStackTrace());
+            throw new Exception();
 	}
 	return listA;
     }

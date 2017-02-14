@@ -17,14 +17,17 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import org.apache.log4j.Logger;
 
 /**
  *
  * @author marte
  */
 public class JournalDAO {
-        
-    private static AreaAvaliacao checkAreaExists(String area){
+    
+    private final static Logger log = Logger.getLogger(JournalDAO.class);    
+    
+    private static AreaAvaliacao checkAreaExists(String area) throws Exception{
         List<AreaAvaliacao> listA = AreaAvaliacaoDAO.getAllNamesAreaAvaliacao();
         
         for(AreaAvaliacao a: listA){
@@ -35,7 +38,7 @@ public class JournalDAO {
         return null;
     }
     
-    private static boolean checkIssnExists(String issn){
+    private static boolean checkIssnExists(String issn) throws Exception{
         List<Issn> listI = IssnDAO.getAllIssn();
         
         for(Issn i: listI){
@@ -46,7 +49,7 @@ public class JournalDAO {
         return false;
     }
     
-    private static boolean checkIssnExists1(String issn){
+    private static boolean checkIssnExists1(String issn) throws Exception{
         boolean exist = IssnDAO.getIssn(issn);
         
         if(exist){
@@ -70,7 +73,7 @@ public class JournalDAO {
         return indice;
     }
     
-    public static void insert(Journal journal){
+    public static void insert(Journal journal) throws Exception{
         Connection conn = null;
 	try{
             int i=1;
@@ -141,15 +144,6 @@ public class JournalDAO {
                     }            
                     ps.close();                    
                 }
-                /*
-                i=1;
-                ps = conn.prepareStatement("INSERT INTO qualis (id_pub_venue,id_area,year,qualis) VALUES (?,?,?,?)");
-                ps.setInt(i++,idPubVenue);
-                ps.setInt(i++,idArea);
-                ps.setBigDecimal(i++, BigDecimal.valueOf(journal.getYear()));
-                ps.setString(i++,token[1]);
-                ps.executeUpdate();
-                ps.close();*/
                 
                 // Inserir Qualis
                 i = 1;
@@ -199,28 +193,31 @@ public class JournalDAO {
                 }
             }
             conn.commit();           
-	}catch(SQLException e){
-            System.err.println( "Ocorreu uma exceção de SQL. Causa: " + e.getMessage() );
-            if(conn !=null){
-		try{
+	} catch (SQLException e) {
+            log.error("Ocorreu uma exceção de SQL.", e.fillInStackTrace());
+            
+            if (conn != null) {
+                try {
                     conn.rollback();
-		}catch(SQLException e1){
-                    System.err.println( "Exceção ao realizar rollback. Causa: " + e1.getMessage() );
-		}
+                } catch (SQLException e1) {
+                    log.error("Exceção ao realizar rollback.", e1.fillInStackTrace());
+                    throw new Exception("Ocorreu um Erro Interno");
+                }
             }
-        }finally{
-            if(conn !=null){
-		try{
+            throw new Exception("Ocorreu um Erro Interno");
+        } finally {
+            if (conn != null) {
+                try {
                     conn.close();
-		}catch(SQLException e){
-                    System.err.println( "Exceção ao fechar a conexão. Causa: " + e.getMessage() );
-                    
-		}
+                } catch (SQLException e) {
+                    log.error("Exceção ao fechar a conexão.", e.fillInStackTrace());
+                    throw new Exception("Ocorreu um Erro Interno");
+                }
             }
-	}
+        }
     }
     
-    public static void update(Journal journal){
+    public static void update(Journal journal) throws Exception{
         Connection conn = null;
         
         try{
@@ -242,7 +239,6 @@ public class JournalDAO {
             // Inserir issn inválido
             for(String q: journal.getInvalidIssns()){
                 if((q!=null)){
-                    //boolean exist = checkIssnExists(q);
                     boolean exist = checkIssnExists1(q);
                     if(exist){
                         i=1;
@@ -335,20 +331,23 @@ public class JournalDAO {
             }
             conn.commit();
         }catch(SQLException e){
-            System.err.println( "Ocorreu uma exceção de SQL. Causa: " + e.getMessage());
+            log.error("Ocorreu uma exceção de SQL.", e.fillInStackTrace());            
             if(conn !=null){
 		try{
                     conn.rollback();
 		}catch(SQLException e1){
-                    System.err.println( "Exceção ao realizar rollback. Causa: " + e1.getMessage() );
+                    log.error("Exceção ao realizar rollback.", e1.fillInStackTrace());
+                    throw new Exception("Ocorreu um Erro Interno");
 		}
             }
+            throw new Exception("Ocorreu um Erro Interno");
         }finally{
             if(conn !=null){
 		try{
                     conn.close();
 		}catch(SQLException e){
-                    System.err.println( "Exceção ao fechar a conexão. Causa: " + e.getMessage() );
+                    log.error("Exceção ao fechar a conexão.", e.fillInStackTrace());
+                    throw new Exception("Ocorreu um Erro Interno");
 		}
             }
 	}

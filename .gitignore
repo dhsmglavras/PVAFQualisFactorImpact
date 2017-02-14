@@ -1,8 +1,12 @@
 # Para todos os arquivos e sub-pastas localizados na pasta QualisJournal_1/
 QualisJournal_1/
+
 # Para arquivos Java compilados
 *.class
+
 # Para sql
 *.sql
+
 # Para build/
 build/
+

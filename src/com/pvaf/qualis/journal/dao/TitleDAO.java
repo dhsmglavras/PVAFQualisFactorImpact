@@ -13,6 +13,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -20,7 +21,9 @@ import java.util.List;
  */
 public class TitleDAO {
     
-    public static List<Title> getTitles(int idPubVenue){
+    private final static Logger log = Logger.getLogger(TitleDAO.class);
+    
+    public static List<Title> getTitles(int idPubVenue) throws Exception {
         List<Title> listT = new ArrayList<>();
         int i=1;
         
@@ -37,12 +40,14 @@ public class TitleDAO {
             }
             
 	}catch(SQLException e){
-            System.err.println("Ocorreu uma exceção de SQL. Causa: " + e.getMessage());
+            log.error("Ocorreu uma exceção de SQL.", e.fillInStackTrace());
+            throw new Exception("Ocorreu um Erro Interno");
 	}
+        
 	return listT;
     }
     
-    public static Integer checkIdPubVenue(Integer idPubVenue, String journalTitle) {
+    public static Integer checkIdPubVenue(Integer idPubVenue, String journalTitle) throws Exception{
 
         int idPubVenueAux = 0;
         try (Connection conn = DBLocator.getConnection()) {
@@ -61,7 +66,8 @@ public class TitleDAO {
             ps.close();
 
         } catch (SQLException e) {
-            System.err.println("Ocorreu uma exceção de SQL. Causa: " + e.getMessage());
+            log.error("Ocorreu uma exceção de SQL.", e.fillInStackTrace());
+            throw new Exception("Ocorreu um Erro Interno");
         }
         return idPubVenueAux;
     }

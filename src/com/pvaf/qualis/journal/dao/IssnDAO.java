@@ -15,13 +15,17 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import org.apache.log4j.Logger;
 
 /**
  *
  * @author marte
  */
 public class IssnDAO {
-    public static HashSet<String> issnDB() {
+    
+    private final static Logger log = Logger.getLogger(IssnDAO.class);
+    
+    public static HashSet<String> issnDB() throws Exception{
         HashSet<String> issns = new HashSet<>();
         Connection conn = null;
         
@@ -53,26 +57,29 @@ public class IssnDAO {
                         
                         statement.close();
                     } catch(SQLException sePublication){
-                        System.out.println( "Exceção ao fechar a conexão. Causa: " + sePublication.getMessage());
+                        log.error("Ocorreu uma exceção de SQL.", sePublication.fillInStackTrace());
+                        throw new Exception("Ocorreu um Erro Interno");
                     }
                 }
                 
             }while(publicationvenue.next());            
         }catch(SQLException e){
-            System.out.println( "Ocorreu uma exceção de SQL. Causa: " + e.getMessage() );
+            log.error("Ocorreu uma exceção de SQL.", e.fillInStackTrace());
+            throw new Exception("Ocorreu um Erro Interno");
 	}finally{
             if(conn !=null){
 		try{
                     conn.close();
 		}catch(SQLException e){
-                    System.out.println( "Exceção ao fechar a conexão. Causa: " + e.getMessage() );
+                    log.error("Exceção ao fechar a conexão.", e.fillInStackTrace());
+                    throw new Exception("Ocorreu um Erro Interno");
 		}
             }
 	}
         return issns;
     }
     
-    public static List<Issn> getAllIssn() {
+    public static List<Issn> getAllIssn() throws Exception{
         List<Issn> issns = new ArrayList<>();
         Connection conn = null;
         
@@ -96,32 +103,32 @@ public class IssnDAO {
                         
                         Issn issn;
                         while(issnRs.next()){
-                            issn = new Issn(issnRs.getInt("idPubvebue"),issnRs.getString("issn"),issnRs.getString("print/online"));
+                            issn = new Issn(issnRs.getInt("id_pub_venue"),issnRs.getString("issn"),issnRs.getString("print/online"));
                             issns.add(issn);
                         }
                     } catch(SQLException sePublication){
-                        System.out.println( "Exceção ao fechar a conexão. Causa: " + sePublication.getMessage() );
-                        sePublication.printStackTrace();
+                        log.error("Ocorreu uma exceção de SQL.", sePublication.fillInStackTrace());
+                        throw new Exception("Ocorreu um Erro Interno");
                     }
                 }
-                
             }
         }catch(SQLException e){
-            System.out.println( "Ocorreu uma exceção de SQL. Causa: " + e.getMessage() );            
+            log.error("Ocorreu uma exceção de SQL.", e.fillInStackTrace());
+            throw new Exception("Ocorreu um Erro Interno");
 	}finally{
             if(conn !=null){
 		try{
                     conn.close();
 		}catch(SQLException e){
-                    System.out.println( "Exceção ao fechar a conexão. Causa: " + e.getMessage() );
-                    e.printStackTrace();
+                    log.error("Exceção ao fechar a conexão.", e.fillInStackTrace());
+                    throw new Exception("Ocorreu um Erro Interno");
 		}
             }
 	}
         return issns;
     }
     
-    public static boolean getIssn(String issn){        
+    public static boolean getIssn(String issn) throws Exception{        
         int i=1;
         
         try(Connection conn = DBLocator.getConnection(); 
@@ -133,7 +140,8 @@ public class IssnDAO {
                 }  
             }
 	}catch(SQLException e){
-            System.err.println("Ocorreu uma exceção de SQL. Causa: " + e.getMessage() );
+            log.error("Ocorreu uma exceção de SQL.", e.fillInStackTrace());
+            throw new Exception("Ocorreu um Erro Interno");
 	}
         return false;
     }

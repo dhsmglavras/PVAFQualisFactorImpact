@@ -23,13 +23,16 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.TreeSet;
-
-
+import org.apache.log4j.PropertyConfigurator;
 /**
  *
  * @author douglas
  */
 public class AppQualisJournal {
+    
+    static {
+        PropertyConfigurator.configure("properties/log4j.properties");
+    }
             
     protected static List<QualisJournal> addComputerScienceDB = new ArrayList<>();
     protected static List<QualisJournal> addJournalsAreaDB = new ArrayList<>();
@@ -37,7 +40,7 @@ public class AppQualisJournal {
     protected static TreeSet<String> issnsIne = new TreeSet<>(); // isnns não existentes no bd    
     protected static TreeSet<String> issnsExi = new TreeSet<>(); // isnns existentes no bd
     
-    public static Set<String> lerQualis(String path, int op){
+    public static Set<String> lerQualis(String path, int op) throws Exception{
         ReadQualisJournal rq = new ReadQualisJournal(path);
         if(op==1){
             rq.redQualis();
@@ -61,7 +64,7 @@ public class AppQualisJournal {
         return issn;        
     }
     
-    public static List<QualisJournal> processQualisJournalsArea(Set<String> qualisJournal, long year, int op){
+    public static List<QualisJournal> processQualisJournalsArea(Set<String> qualisJournal, long year, int op) throws Exception{
         List<QualisJournal> qualisJournals = new ArrayList<>();
         
         if(op==1){
@@ -139,15 +142,9 @@ public class AppQualisJournal {
         return issnJa;
     }
     
-    public static void splitJournals(Set<String> comp, List<QualisJournal> journals){            
+    public static void splitJournals(Set<String> comp, List<QualisJournal> journals) throws Exception{            
         for(QualisJournal s: journals){            
             boolean exist = false;
-            
-            /*for(Iterator i = comp.iterator(); i.hasNext() && !exist;){                
-                if(s.getIssn().equals(i.next())){
-                    exist= true;                    
-                }  
-            }*/
             
             exist = IssnDAO.getIssn(s.getIssn());
             
@@ -234,112 +231,116 @@ public class AppQualisJournal {
     /** 
      * @param args the command line arguments
      */
-    public static void main(String[] args)  {
+    public static void main(String[] args) {
         
-        System.out.println("Opções");
-	System.out.println("1 journal Qualis");
-	System.out.println("2 registro de erros");
-                
-        Scanner ler = new Scanner( System.in );
-        int op = ler.nextInt();
-        
-        switch(op){
+        try {
+            System.out.println("Opções");
+            System.out.println("1 journal Qualis");
+            System.out.println("2 registro de erros");
             
-            case 1:
-                AppQualisJournal.deleteFile("registroErro.xls");
+            Scanner ler = new Scanner( System.in );
+            int op = ler.nextInt();
+            
+            switch(op){
                 
-                Set<String> setJournalsQualis = AppQualisJournal.lerQualis("qualis-journal-todas-as-areas-2015.xls",op);
-                
-                List<QualisJournal> listQualisJournals = AppQualisJournal.processQualisJournalsArea(setJournalsQualis,2015,op);
-                
-                Set<String> setIssnJa = AppQualisJournal.createSetIssn(listQualisJournals);
-        
-                Set<String> setIssnCs = AppQualisJournal.addQualisComputerScience(IssnDAO.issnDB());
-        
-                AppQualisJournal.splitJournals(setIssnCs, listQualisJournals );
-        
-                listQualisJournals.clear();
-                setIssnCs.clear();
-                setIssnJa.clear();
-        
-                List<QualisJournal> listCs = AppQualisJournal.addComputerScienceDB;
-                List<Journal> qualisC = AppQualisJournal.createListQualis(AppQualisJournal.issnsExi);
-        
-                List<QualisJournal> listJa = AppQualisJournal.addJournalsAreaDB;
-                List<Journal> qualisJ = AppQualisJournal.createListQualis(AppQualisJournal.issnsIne);   
-
-                AppQualisJournal.addAttributesQualis(qualisJ,listJa);
-                listJa.clear();
-                AppQualisJournal.addJournalsAreaDB.clear();
-                AppQualisJournal.issnsIne.clear();
-                        
-                AppQualisJournal.addAttributesQualis(qualisC, listCs);
-                listCs.clear();
-                AppQualisJournal.addComputerScienceDB.clear();
-                AppQualisJournal.issnsExi.clear();
-        
-                for(Journal q: qualisJ){
-                    JournalDAO.insert(q);                    
-                }
-        
-                for(Journal q: qualisC){
-                    JournalDAO.update(q);
-                }
-                        
-                System.out.println(qualisJ.size());
-                System.out.println(qualisC.size());
-                                
-                break;
-                
-            case 2:
-                
-                setJournalsQualis = AppQualisJournal.lerQualis("registroErro.xls",op);
-                
-                listQualisJournals = AppQualisJournal.processQualisJournalsArea(setJournalsQualis,2015,op);
-                //System.out.println(listQualisJournals.size());
-                setIssnJa = AppQualisJournal.createSetIssn(listQualisJournals);
-        
-                setIssnCs = AppQualisJournal.addQualisComputerScience(IssnDAO.issnDB());
-        
-                AppQualisJournal.splitJournals(setIssnCs, listQualisJournals );
-        
-                listQualisJournals.clear();
-                setIssnCs.clear();
-                setIssnJa.clear();
-        
-                listCs = AppQualisJournal.addComputerScienceDB;
-                qualisC = AppQualisJournal.createListQualis(AppQualisJournal.issnsExi);
-        
-                listJa = AppQualisJournal.addJournalsAreaDB;
-                qualisJ = AppQualisJournal.createListQualis(AppQualisJournal.issnsIne);
-
-                AppQualisJournal.addAttributesQualis(qualisJ,listJa);
-                listJa.clear();
-                AppQualisJournal.addJournalsAreaDB.clear();
-                AppQualisJournal.issnsIne.clear();
-                
-                AppQualisJournal.addAttributesQualis(qualisC, listCs);
-                listCs.clear();
-                AppQualisJournal.addComputerScienceDB.clear();
-                AppQualisJournal.issnsExi.clear();
-                
-                for(Journal q: qualisJ){
-                    JournalDAO.insert(q);                    
-                }
-        
-                for(Journal q: qualisC){
-                    JournalDAO.update(q);                    
-                }
-                        
-                System.out.println(qualisJ.size());
-                System.out.println(qualisC.size());
-                
-                AppQualisJournal.deleteFile("registroErro.xls");
-                
-                break;
-                
-            default:;
-        }   
+                case 1:
+                    AppQualisJournal.deleteFile("registroErro.xls");
+                    
+                    Set<String> setJournalsQualis = AppQualisJournal.lerQualis("qualis-journal-todas-as-areas-2015.xls",op);
+                    
+                    List<QualisJournal> listQualisJournals = AppQualisJournal.processQualisJournalsArea(setJournalsQualis,2015,op);
+                    
+                    Set<String> setIssnJa = AppQualisJournal.createSetIssn(listQualisJournals);
+                    
+                    Set<String> setIssnCs = AppQualisJournal.addQualisComputerScience(IssnDAO.issnDB());
+                    
+                    AppQualisJournal.splitJournals(setIssnCs, listQualisJournals );
+                    
+                    listQualisJournals.clear();
+                    setIssnCs.clear();
+                    setIssnJa.clear();
+                    
+                    List<QualisJournal> listCs = AppQualisJournal.addComputerScienceDB;
+                    List<Journal> qualisC = AppQualisJournal.createListQualis(AppQualisJournal.issnsExi);
+                    
+                    List<QualisJournal> listJa = AppQualisJournal.addJournalsAreaDB;
+                    List<Journal> qualisJ = AppQualisJournal.createListQualis(AppQualisJournal.issnsIne);
+                    
+                    AppQualisJournal.addAttributesQualis(qualisJ,listJa);
+                    listJa.clear();
+                    AppQualisJournal.addJournalsAreaDB.clear();
+                    AppQualisJournal.issnsIne.clear();
+                    
+                    AppQualisJournal.addAttributesQualis(qualisC, listCs);
+                    listCs.clear();
+                    AppQualisJournal.addComputerScienceDB.clear();
+                    AppQualisJournal.issnsExi.clear();
+                    
+                    for(Journal q: qualisJ){
+                        JournalDAO.insert(q);
+                    }
+                    
+                    for(Journal q: qualisC){
+                        JournalDAO.update(q);
+                    }
+                    
+                    System.out.println(qualisJ.size());
+                    System.out.println(qualisC.size());
+                    
+                    break;
+                    
+                case 2:
+                    
+                    setJournalsQualis = AppQualisJournal.lerQualis("registroErro.xls",op);
+                    
+                    listQualisJournals = AppQualisJournal.processQualisJournalsArea(setJournalsQualis,2015,op);
+                    //System.out.println(listQualisJournals.size());
+                    setIssnJa = AppQualisJournal.createSetIssn(listQualisJournals);
+                    
+                    setIssnCs = AppQualisJournal.addQualisComputerScience(IssnDAO.issnDB());
+                    
+                    AppQualisJournal.splitJournals(setIssnCs, listQualisJournals );
+                    
+                    listQualisJournals.clear();
+                    setIssnCs.clear();
+                    setIssnJa.clear();
+                    
+                    listCs = AppQualisJournal.addComputerScienceDB;
+                    qualisC = AppQualisJournal.createListQualis(AppQualisJournal.issnsExi);
+                    
+                    listJa = AppQualisJournal.addJournalsAreaDB;
+                    qualisJ = AppQualisJournal.createListQualis(AppQualisJournal.issnsIne);
+                    
+                    AppQualisJournal.addAttributesQualis(qualisJ,listJa);
+                    listJa.clear();
+                    AppQualisJournal.addJournalsAreaDB.clear();
+                    AppQualisJournal.issnsIne.clear();
+                    
+                    AppQualisJournal.addAttributesQualis(qualisC, listCs);
+                    listCs.clear();
+                    AppQualisJournal.addComputerScienceDB.clear();
+                    AppQualisJournal.issnsExi.clear();
+                    
+                    for(Journal q: qualisJ){
+                        JournalDAO.insert(q);
+                    }
+                    
+                    for(Journal q: qualisC){
+                        JournalDAO.update(q);
+                    }
+                    
+                    System.out.println(qualisJ.size());
+                    System.out.println(qualisC.size());
+                    
+                    AppQualisJournal.deleteFile("registroErro.xls");
+                    
+                    break;   
+                    
+                default:;
+            }
+        } catch (Exception ex) {
+            System.err.println(ex.getMessage());
+        }
     }
     
     private static class CompararJournalsTitulos implements Comparator<QualisJournal>{      
