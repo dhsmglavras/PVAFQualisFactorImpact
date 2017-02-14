@@ -5,6 +5,7 @@
  */
 package com.pvaf.qualis.journal.io;
 
+import com.pvaf.qualis.journal.exceptions.InternalErrorException;
 import java.io.FileNotFoundException;
 import java.util.Set;
 import java.util.TreeSet;
@@ -46,7 +47,7 @@ public class ReadQualisJournal {
         return this.journalsQualis;
     }
        
-    public void redQualis() throws Exception {
+    public void redQualis() throws InternalErrorException {
         
         try{
             File file = new File(path);
@@ -102,17 +103,17 @@ public class ReadQualisJournal {
             workbook.close();            
         }catch(FileNotFoundException f){
             log.error("Arq. nao existe.",f.fillInStackTrace());
-            throw new Exception("Ocorreu um Erro Interno");
+            throw new InternalErrorException();
 	}catch (IOException e){
             log.error("Erro de E/S.",e.fillInStackTrace());
-            throw new Exception("Ocorreu um Erro Interno");
+            throw new InternalErrorException();
 	} catch (BiffException ex) {
             log.error("Erro de Leitura do arquivo biff.", ex.fillInStackTrace());
-            throw new Exception("Ocorreu um Erro Interno");
+            throw new InternalErrorException();
         }
     }
 
-    public void redQualisInvalidIssn() throws Exception{
+    public void redQualisInvalidIssn() throws InternalErrorException{
         
         try{
             File file = new File(path);
@@ -176,13 +177,13 @@ public class ReadQualisJournal {
             
         }catch(FileNotFoundException f){
             log.error("Arq. nao existe.", f.fillInStackTrace());
-            throw new Exception("Ocorreu um Erro Interno");
+            throw new InternalErrorException();
 	}catch (IOException e){
             log.error("Erro de E/S.", e.fillInStackTrace());
-            throw new Exception("Ocorreu um Erro Interno");
+            throw new InternalErrorException();
 	} catch (BiffException ex) {
             log.error("Erro de Leitura do arquivo biff.", ex.fillInStackTrace());
-            throw new Exception("Ocorreu um Erro Interno");
+            throw new InternalErrorException();
         }
     }
 }

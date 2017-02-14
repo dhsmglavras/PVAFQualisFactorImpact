@@ -7,6 +7,7 @@ package com.pvaf.qualis.journal.dao;
 
 import com.pvaf.qualis.journal.service.DBLocator;
 import com.pvaf.qualis.journal.entidades.AreaAvaliacao;
+import com.pvaf.qualis.journal.exceptions.InternalErrorException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -23,7 +24,7 @@ public class AreaAvaliacaoDAO {
     
     private final static Logger log = Logger.getLogger(AreaAvaliacaoDAO.class);
     
-    public static List<AreaAvaliacao> getAllNamesAreaAvaliacao() throws Exception {
+    public static List<AreaAvaliacao> getAllNamesAreaAvaliacao() throws InternalErrorException {
         List<AreaAvaliacao> listA = new ArrayList<>();
         
         try(Connection conn = DBLocator.getConnection();
@@ -37,7 +38,7 @@ public class AreaAvaliacaoDAO {
             }
 	}catch(SQLException e){
             log.error("Ocorreu uma exceção de SQL.", e.fillInStackTrace());
-            throw new Exception();
+            throw new InternalErrorException();
 	}
 	return listA;
     }

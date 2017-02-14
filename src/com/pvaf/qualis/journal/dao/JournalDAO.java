@@ -10,6 +10,7 @@ import com.pvaf.qualis.journal.entidades.AreaAvaliacao;
 import com.pvaf.qualis.journal.entidades.AreaClassification;
 import com.pvaf.qualis.journal.entidades.Journal;
 import com.pvaf.qualis.journal.entidades.Issn;
+import com.pvaf.qualis.journal.exceptions.InternalErrorException;
 import java.math.BigDecimal;
 
 import java.sql.Connection;
@@ -27,7 +28,7 @@ public class JournalDAO {
     
     private final static Logger log = Logger.getLogger(JournalDAO.class);    
     
-    private static AreaAvaliacao checkAreaExists(String area) throws Exception{
+    private static AreaAvaliacao checkAreaExists(String area) throws InternalErrorException{
         List<AreaAvaliacao> listA = AreaAvaliacaoDAO.getAllNamesAreaAvaliacao();
         
         for(AreaAvaliacao a: listA){
@@ -38,7 +39,7 @@ public class JournalDAO {
         return null;
     }
     
-    private static boolean checkIssnExists(String issn) throws Exception{
+    private static boolean checkIssnExists(String issn) throws InternalErrorException{
         List<Issn> listI = IssnDAO.getAllIssn();
         
         for(Issn i: listI){
@@ -49,7 +50,7 @@ public class JournalDAO {
         return false;
     }
     
-    private static boolean checkIssnExists1(String issn) throws Exception{
+    private static boolean checkIssnExists1(String issn) throws InternalErrorException{
         boolean exist = IssnDAO.getIssn(issn);
         
         if(exist){
@@ -73,7 +74,7 @@ public class JournalDAO {
         return indice;
     }
     
-    public static void insert(Journal journal) throws Exception{
+    public static void insert(Journal journal) throws InternalErrorException{
         Connection conn = null;
 	try{
             int i=1;
@@ -201,23 +202,23 @@ public class JournalDAO {
                     conn.rollback();
                 } catch (SQLException e1) {
                     log.error("Exceção ao realizar rollback.", e1.fillInStackTrace());
-                    throw new Exception("Ocorreu um Erro Interno");
+                    throw new InternalErrorException();
                 }
             }
-            throw new Exception("Ocorreu um Erro Interno");
+            throw new InternalErrorException();
         } finally {
             if (conn != null) {
                 try {
                     conn.close();
                 } catch (SQLException e) {
                     log.error("Exceção ao fechar a conexão.", e.fillInStackTrace());
-                    throw new Exception("Ocorreu um Erro Interno");
+                    throw new InternalErrorException();
                 }
             }
         }
     }
     
-    public static void update(Journal journal) throws Exception{
+    public static void update(Journal journal) throws InternalErrorException{
         Connection conn = null;
         
         try{
@@ -317,7 +318,12 @@ public class JournalDAO {
             for(String journalTitle: journal.getTitles()){
                 int idPubVenueAux;
                 
-                idPubVenueAux = TitleDAO.checkIdPubVenue(idPubVenue, journalTitle);
+                try{
+                    idPubVenueAux = TitleDAO.checkIdPubVenue(idPubVenue, journalTitle);
+                }catch(InternalErrorException e){
+                    throw new InternalErrorException();
+                }
+                 
                 
                 if (idPubVenue != idPubVenueAux) {
                     i=1;
@@ -337,17 +343,17 @@ public class JournalDAO {
                     conn.rollback();
 		}catch(SQLException e1){
                     log.error("Exceção ao realizar rollback.", e1.fillInStackTrace());
-                    throw new Exception("Ocorreu um Erro Interno");
+                    throw new InternalErrorException();
 		}
             }
-            throw new Exception("Ocorreu um Erro Interno");
+            throw new InternalErrorException();
         }finally{
             if(conn !=null){
 		try{
                     conn.close();
 		}catch(SQLException e){
                     log.error("Exceção ao fechar a conexão.", e.fillInStackTrace());
-                    throw new Exception("Ocorreu um Erro Interno");
+                    throw new InternalErrorException();
 		}
             }
 	}

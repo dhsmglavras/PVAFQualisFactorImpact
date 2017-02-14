@@ -11,6 +11,7 @@ import com.pvaf.qualis.journal.entidades.QualisJournal;
 import com.pvaf.qualis.journal.entidades.QualisJournalInvalidIssn;
 import com.pvaf.qualis.journal.entidades.AreaClassification;
 import com.pvaf.qualis.journal.entidades.Journal;
+import com.pvaf.qualis.journal.exceptions.InternalErrorException;
 import com.pvaf.qualis.journal.exceptions.IssnException;
 import com.pvaf.qualis.journal.io.ReadQualisJournal;
 import java.io.File;
@@ -40,7 +41,7 @@ public class AppQualisJournal {
     protected static TreeSet<String> issnsIne = new TreeSet<>(); // isnns não existentes no bd    
     protected static TreeSet<String> issnsExi = new TreeSet<>(); // isnns existentes no bd
     
-    public static Set<String> lerQualis(String path, int op) throws Exception{
+    public static Set<String> lerQualis(String path, int op) throws InternalErrorException{
         ReadQualisJournal rq = new ReadQualisJournal(path);
         if(op==1){
             rq.redQualis();
@@ -64,7 +65,7 @@ public class AppQualisJournal {
         return issn;        
     }
     
-    public static List<QualisJournal> processQualisJournalsArea(Set<String> qualisJournal, long year, int op) throws Exception{
+    public static List<QualisJournal> processQualisJournalsArea(Set<String> qualisJournal, long year, int op) throws InternalErrorException {
         List<QualisJournal> qualisJournals = new ArrayList<>();
         
         if(op==1){
@@ -86,13 +87,9 @@ public class AppQualisJournal {
                     QualisJournal ja = new QualisJournal(issn,title,ac,year);
                     qualisJournals.add(ja);
                 }else{
-                
                     try {
                         throw new IssnException(q);
-                    }catch (IssnException e) {
-                        if(!e.fileExist()){
-                            System.err.println(e.getMessage());
-                        }
+                    } catch (IssnException e) {
                         e.log();
                     }
                 }
@@ -117,13 +114,9 @@ public class AppQualisJournal {
                     QualisJournal ja = new QualisJournalInvalidIssn(issn,issnInvalid,title,ac,year);
                     qualisJournals.add(ja);
                 }else{
-                
                     try {
                         throw new IssnException(q);
                     }catch (IssnException e) {
-                        if(!e.fileExist()){
-                            System.err.println(e.getMessage());
-                        }
                         e.log2();
                     }
                 }
@@ -142,7 +135,7 @@ public class AppQualisJournal {
         return issnJa;
     }
     
-    public static void splitJournals(Set<String> comp, List<QualisJournal> journals) throws Exception{            
+    public static void splitJournals(Set<String> comp, List<QualisJournal> journals) throws InternalErrorException{            
         for(QualisJournal s: journals){            
             boolean exist = false;
             
@@ -294,7 +287,7 @@ public class AppQualisJournal {
                     setJournalsQualis = AppQualisJournal.lerQualis("registroErro.xls",op);
                     
                     listQualisJournals = AppQualisJournal.processQualisJournalsArea(setJournalsQualis,2015,op);
-                    //System.out.println(listQualisJournals.size());
+                    
                     setIssnJa = AppQualisJournal.createSetIssn(listQualisJournals);
                     
                     setIssnCs = AppQualisJournal.addQualisComputerScience(IssnDAO.issnDB());
@@ -338,7 +331,7 @@ public class AppQualisJournal {
                     
                 default:;
             }
-        } catch (Exception ex) {
+        } catch (InternalErrorException ex) {
             System.err.println(ex.getMessage());
         }
     }

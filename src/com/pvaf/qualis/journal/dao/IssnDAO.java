@@ -7,6 +7,7 @@ package com.pvaf.qualis.journal.dao;
 
 import com.pvaf.qualis.journal.service.DBLocator;
 import com.pvaf.qualis.journal.entidades.Issn;
+import com.pvaf.qualis.journal.exceptions.InternalErrorException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -25,7 +26,7 @@ public class IssnDAO {
     
     private final static Logger log = Logger.getLogger(IssnDAO.class);
     
-    public static HashSet<String> issnDB() throws Exception{
+    public static HashSet<String> issnDB() throws InternalErrorException{
         HashSet<String> issns = new HashSet<>();
         Connection conn = null;
         
@@ -58,28 +59,28 @@ public class IssnDAO {
                         statement.close();
                     } catch(SQLException sePublication){
                         log.error("Ocorreu uma exceção de SQL.", sePublication.fillInStackTrace());
-                        throw new Exception("Ocorreu um Erro Interno");
+                        throw new InternalErrorException();
                     }
                 }
                 
             }while(publicationvenue.next());            
         }catch(SQLException e){
             log.error("Ocorreu uma exceção de SQL.", e.fillInStackTrace());
-            throw new Exception("Ocorreu um Erro Interno");
+            throw new InternalErrorException();
 	}finally{
             if(conn !=null){
 		try{
                     conn.close();
 		}catch(SQLException e){
                     log.error("Exceção ao fechar a conexão.", e.fillInStackTrace());
-                    throw new Exception("Ocorreu um Erro Interno");
+                    throw new InternalErrorException();
 		}
             }
 	}
         return issns;
     }
     
-    public static List<Issn> getAllIssn() throws Exception{
+    public static List<Issn> getAllIssn() throws InternalErrorException{
         List<Issn> issns = new ArrayList<>();
         Connection conn = null;
         
@@ -108,27 +109,27 @@ public class IssnDAO {
                         }
                     } catch(SQLException sePublication){
                         log.error("Ocorreu uma exceção de SQL.", sePublication.fillInStackTrace());
-                        throw new Exception("Ocorreu um Erro Interno");
+                        throw new InternalErrorException();
                     }
                 }
             }
         }catch(SQLException e){
             log.error("Ocorreu uma exceção de SQL.", e.fillInStackTrace());
-            throw new Exception("Ocorreu um Erro Interno");
+            throw new InternalErrorException();
 	}finally{
             if(conn !=null){
 		try{
                     conn.close();
 		}catch(SQLException e){
                     log.error("Exceção ao fechar a conexão.", e.fillInStackTrace());
-                    throw new Exception("Ocorreu um Erro Interno");
+                    throw new InternalErrorException();
 		}
             }
 	}
         return issns;
     }
     
-    public static boolean getIssn(String issn) throws Exception{        
+    public static boolean getIssn(String issn) throws InternalErrorException{        
         int i=1;
         
         try(Connection conn = DBLocator.getConnection(); 
@@ -141,7 +142,7 @@ public class IssnDAO {
             }
 	}catch(SQLException e){
             log.error("Ocorreu uma exceção de SQL.", e.fillInStackTrace());
-            throw new Exception("Ocorreu um Erro Interno");
+            throw new InternalErrorException();
 	}
         return false;
     }

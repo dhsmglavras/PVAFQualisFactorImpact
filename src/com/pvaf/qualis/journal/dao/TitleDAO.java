@@ -7,6 +7,7 @@ package com.pvaf.qualis.journal.dao;
 
 import com.pvaf.qualis.journal.service.DBLocator;
 import com.pvaf.qualis.journal.entidades.Title;
+import com.pvaf.qualis.journal.exceptions.InternalErrorException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -23,7 +24,7 @@ public class TitleDAO {
     
     private final static Logger log = Logger.getLogger(TitleDAO.class);
     
-    public static List<Title> getTitles(int idPubVenue) throws Exception {
+    public static List<Title> getTitles(int idPubVenue) throws InternalErrorException {
         List<Title> listT = new ArrayList<>();
         int i=1;
         
@@ -41,16 +42,18 @@ public class TitleDAO {
             
 	}catch(SQLException e){
             log.error("Ocorreu uma exceção de SQL.", e.fillInStackTrace());
-            throw new Exception("Ocorreu um Erro Interno");
+            throw new InternalErrorException();
 	}
         
 	return listT;
     }
     
-    public static Integer checkIdPubVenue(Integer idPubVenue, String journalTitle) throws Exception{
-
+    public static Integer checkIdPubVenue(Integer idPubVenue, String journalTitle) throws InternalErrorException{
         int idPubVenueAux = 0;
-        try (Connection conn = DBLocator.getConnection()) {
+        Connection conn = null;
+        
+        try {
+            conn = DBLocator.getConnection();
 
             PreparedStatement ps = conn.prepareStatement("SELECT id_pub_venue FROM title WHERE id_pub_venue = ? AND title = ?");
 
@@ -64,10 +67,19 @@ public class TitleDAO {
             }
             title.close();
             ps.close();
-
+            
         } catch (SQLException e) {
             log.error("Ocorreu uma exceção de SQL.", e.fillInStackTrace());
-            throw new Exception("Ocorreu um Erro Interno");
+            throw new InternalErrorException();
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    log.error("Exceção ao fechar a conexão.", e.fillInStackTrace());
+                    throw new InternalErrorException();
+                }
+            }
         }
         return idPubVenueAux;
     }

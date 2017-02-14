@@ -32,7 +32,7 @@ public class IssnException extends Exception{
         this.numero = autoIncremento++;
     }
             
-    public void log() throws Exception{
+    public void log() throws InternalErrorException{
         
         try {
             
@@ -116,20 +116,20 @@ public class IssnException extends Exception{
                     
                 } catch (BiffException ex) {
                     log.error("Erro de Leitura do arquivo biff.", ex.fillInStackTrace());
-                    throw new Exception("Ocorreu um Erro Interno");
+                    throw new InternalErrorException();
                 }
             }
             
         } catch (IOException e) {
             log.error("Erro de E/S.", e.fillInStackTrace());
-            throw new Exception("Ocorreu um Erro Interno");
+            throw new InternalErrorException();
         } catch (WriteException e){
             log.error("Erro em escrever no arquivo.", e.fillInStackTrace());
-            throw new Exception("Ocorreu um Erro Interno");
+            throw new InternalErrorException();
         }
     }
     
-    public void log2() throws Exception{
+    public void log2() throws InternalErrorException{
         try {
             
             Label label;
@@ -211,16 +211,16 @@ public class IssnException extends Exception{
                     
                 } catch (BiffException ex) {
                     log.error("Erro de Leitura do arquivo biff.", ex.fillInStackTrace());
-                    throw new Exception("Ocorreu um Erro Interno");
+                    throw new InternalErrorException();
                 }
             }
             
         } catch (IOException e) {
             log.error("Erro de E/S.", e.fillInStackTrace());
-            throw new Exception("Ocorreu um Erro Interno");
+            throw new InternalErrorException();
         } catch (WriteException e) {
             log.error("Erro em escrever no arquivo.", e.fillInStackTrace());
-            throw new Exception("Ocorreu um Erro Interno");
+            throw new InternalErrorException();
         }
     }
         

@@ -5,6 +5,7 @@
  */
 package com.pvaf.qualis.journal.service;
 
+import com.pvaf.qualis.journal.exceptions.InternalErrorException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -26,7 +27,7 @@ public class DBLocator {
 	}		
     }
 	
-    public static java.sql.Connection getConnection() throws SQLException, Exception{
+    public static java.sql.Connection getConnection() throws SQLException, InternalErrorException{
         Login login = new Login();
 	Connection conn; 
 	conn = DriverManager.getConnection(login.getUrl(), login.getUser(), login.getPassword());
