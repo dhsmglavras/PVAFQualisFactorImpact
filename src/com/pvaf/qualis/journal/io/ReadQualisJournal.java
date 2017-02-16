@@ -5,7 +5,7 @@
  */
 package com.pvaf.qualis.journal.io;
 
-import com.pvaf.qualis.journal.exceptions.InternalErrorException;
+import com.pvaf.qualis.journal.exceptions.ErrorException;
 import java.io.FileNotFoundException;
 import java.util.Set;
 import java.util.TreeSet;
@@ -47,7 +47,7 @@ public class ReadQualisJournal {
         return this.journalsQualis;
     }
        
-    public void redQualis() throws InternalErrorException {
+    public void redQualis() throws ErrorException {
         
         try{
             File file = new File(path);
@@ -103,17 +103,17 @@ public class ReadQualisJournal {
             workbook.close();            
         }catch(FileNotFoundException f){
             log.error("Arq. nao existe.",f.fillInStackTrace());
-            throw new InternalErrorException();
+            throw new ErrorException("Ocorreu um Erro Interno");
 	}catch (IOException e){
             log.error("Erro de E/S.",e.fillInStackTrace());
-            throw new InternalErrorException();
+            throw new ErrorException("Ocorreu um Erro Interno");
 	} catch (BiffException ex) {
             log.error("Erro de Leitura do arquivo biff.", ex.fillInStackTrace());
-            throw new InternalErrorException();
+            throw new ErrorException("Salve no Formato Microsoft Excel (.xls)");
         }
     }
 
-    public void redQualisInvalidIssn() throws InternalErrorException{
+    public void redQualisInvalidIssn() throws ErrorException{
         
         try{
             File file = new File(path);
@@ -177,13 +177,13 @@ public class ReadQualisJournal {
             
         }catch(FileNotFoundException f){
             log.error("Arq. nao existe.", f.fillInStackTrace());
-            throw new InternalErrorException();
+            throw new ErrorException("Ocorreu um Erro Interno");
 	}catch (IOException e){
             log.error("Erro de E/S.", e.fillInStackTrace());
-            throw new InternalErrorException();
+            throw new ErrorException("Ocorreu um Erro Interno");
 	} catch (BiffException ex) {
             log.error("Erro de Leitura do arquivo biff.", ex.fillInStackTrace());
-            throw new InternalErrorException();
+            throw new ErrorException("Salve no Formato Microsoft Excel (.xls)");
         }
     }
 }

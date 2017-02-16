@@ -11,7 +11,7 @@ import com.pvaf.qualis.journal.entidades.QualisJournal;
 import com.pvaf.qualis.journal.entidades.QualisJournalInvalidIssn;
 import com.pvaf.qualis.journal.entidades.AreaClassification;
 import com.pvaf.qualis.journal.entidades.Journal;
-import com.pvaf.qualis.journal.exceptions.InternalErrorException;
+import com.pvaf.qualis.journal.exceptions.ErrorException;
 import com.pvaf.qualis.journal.exceptions.IssnException;
 import com.pvaf.qualis.journal.io.ReadQualisJournal;
 import java.io.File;
@@ -41,7 +41,7 @@ public class AppQualisJournal {
     protected static TreeSet<String> issnsIne = new TreeSet<>(); // isnns não existentes no bd    
     protected static TreeSet<String> issnsExi = new TreeSet<>(); // isnns existentes no bd
     
-    public static Set<String> lerQualis(String path, int op) throws InternalErrorException{
+    public static Set<String> lerQualis(String path, int op) throws ErrorException{
         ReadQualisJournal rq = new ReadQualisJournal(path);
         if(op==1){
             rq.redQualis();
@@ -65,7 +65,7 @@ public class AppQualisJournal {
         return issn;        
     }
     
-    public static List<QualisJournal> processQualisJournalsArea(Set<String> qualisJournal, long year, int op) throws InternalErrorException {
+    public static List<QualisJournal> processQualisJournalsArea(Set<String> qualisJournal, long year, int op) throws ErrorException {
         List<QualisJournal> qualisJournals = new ArrayList<>();
         
         if(op==1){
@@ -135,7 +135,7 @@ public class AppQualisJournal {
         return issnJa;
     }
     
-    public static void splitJournals(Set<String> comp, List<QualisJournal> journals) throws InternalErrorException{            
+    public static void splitJournals(Set<String> comp, List<QualisJournal> journals) throws ErrorException{            
         for(QualisJournal s: journals){            
             boolean exist = false;
             
@@ -221,6 +221,12 @@ public class AppQualisJournal {
         File file = new File(path);
         file.delete();
     }
+    
+    public static boolean fileExists(String path){
+        File file = new File(path);
+        return file.exists();
+    }
+    
     /** 
      * @param args the command line arguments
      */
@@ -325,13 +331,19 @@ public class AppQualisJournal {
                     System.out.println(qualisJ.size());
                     System.out.println(qualisC.size());
                     
-                    AppQualisJournal.deleteFile("registroErro.xls");
-                    
                     break;   
                     
                 default:;
             }
-        } catch (InternalErrorException ex) {
+            
+            if (AppQualisJournal.fileExists("registroErro.xls")) {
+                try {
+                    throw new IssnException();
+                } catch (IssnException e) {
+                    System.err.println(e.getMessage());
+                }
+            }
+        } catch (ErrorException ex) {
             System.err.println(ex.getMessage());
         }
     }

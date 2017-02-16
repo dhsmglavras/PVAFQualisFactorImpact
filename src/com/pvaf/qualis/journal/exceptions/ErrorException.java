@@ -9,16 +9,16 @@ package com.pvaf.qualis.journal.exceptions;
  *
  * @author douglas
  */
-public class InternalErrorException extends Exception{
+public class ErrorException extends Exception{
     
-    public InternalErrorException(){
+    private String message;
     
+    public ErrorException(String message){
+        this.message = message;    
     }
     
     @Override
     public String getMessage(){
-        return "Ocorreu um Erro Interno";
+        return message;
     }
-    
-    
 }

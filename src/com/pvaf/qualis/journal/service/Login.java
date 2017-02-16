@@ -10,7 +10,7 @@ package com.pvaf.qualis.journal.service;
  * @author marte
  */
 
-import com.pvaf.qualis.journal.exceptions.InternalErrorException;
+import com.pvaf.qualis.journal.exceptions.ErrorException;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -27,7 +27,7 @@ public class Login {
 	
     private String url;
 		
-    public Login() throws InternalErrorException{
+    public Login() throws ErrorException{
         try{
             Properties props = new Properties();
             FileInputStream file = new FileInputStream("./properties/login.properties");
@@ -39,10 +39,10 @@ public class Login {
             file.close();
         }catch(FileNotFoundException e){
             log.error("Arq. nao existe.", e.fillInStackTrace());
-            throw new InternalErrorException();
+            throw new ErrorException("Ocorreu um Erro Interno");
         }catch(IOException e){
             log.error("Erro de E/S.", e.fillInStackTrace());
-            throw new InternalErrorException();
+            throw new ErrorException("Ocorreu um Erro Interno");
         }
     }
 	

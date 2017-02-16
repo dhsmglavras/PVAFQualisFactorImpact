@@ -7,7 +7,7 @@ package com.pvaf.qualis.journal.dao;
 
 import com.pvaf.qualis.journal.service.DBLocator;
 import com.pvaf.qualis.journal.entidades.Title;
-import com.pvaf.qualis.journal.exceptions.InternalErrorException;
+import com.pvaf.qualis.journal.exceptions.ErrorException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -24,7 +24,7 @@ public class TitleDAO {
     
     private final static Logger log = Logger.getLogger(TitleDAO.class);
     
-    public static List<Title> getTitles(int idPubVenue) throws InternalErrorException {
+    public static List<Title> getTitles(int idPubVenue) throws ErrorException {
         List<Title> listT = new ArrayList<>();
         int i=1;
         
@@ -42,13 +42,13 @@ public class TitleDAO {
             
 	}catch(SQLException e){
             log.error("Ocorreu uma exceção de SQL.", e.fillInStackTrace());
-            throw new InternalErrorException();
+            throw new ErrorException("Ocorreu um Erro Interno");
 	}
         
 	return listT;
     }
     
-    public static Integer checkIdPubVenue(Integer idPubVenue, String journalTitle) throws InternalErrorException{
+    public static Integer checkIdPubVenue(Integer idPubVenue, String journalTitle) throws ErrorException{
         int idPubVenueAux = 0;
         Connection conn = null;
         
@@ -70,14 +70,14 @@ public class TitleDAO {
             
         } catch (SQLException e) {
             log.error("Ocorreu uma exceção de SQL.", e.fillInStackTrace());
-            throw new InternalErrorException();
+            throw new ErrorException("Ocorreu um Erro Interno");
         } finally {
             if (conn != null) {
                 try {
                     conn.close();
                 } catch (SQLException e) {
                     log.error("Exceção ao fechar a conexão.", e.fillInStackTrace());
-                    throw new InternalErrorException();
+                    throw new ErrorException("Ocorreu um Erro Interno");
                 }
             }
         }

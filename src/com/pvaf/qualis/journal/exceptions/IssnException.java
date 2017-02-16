@@ -26,13 +26,18 @@ public class IssnException extends Exception{
     private final String line;
     
     private final static Logger log = Logger.getLogger(IssnException.class);
-                
+    
+    public IssnException(){
+        this.line = null;
+        this.numero =0;
+    }
+    
     public IssnException(String line){
         this.line = line;
         this.numero = autoIncremento++;
     }
             
-    public void log() throws InternalErrorException{
+    public void log() throws ErrorException{
         
         try {
             
@@ -116,20 +121,21 @@ public class IssnException extends Exception{
                     
                 } catch (BiffException ex) {
                     log.error("Erro de Leitura do arquivo biff.", ex.fillInStackTrace());
-                    throw new InternalErrorException();
+                    throw new ErrorException("Ocorreu um Erro Interno");
+                    
                 }
             }
             
         } catch (IOException e) {
             log.error("Erro de E/S.", e.fillInStackTrace());
-            throw new InternalErrorException();
+            throw new ErrorException("Ocorreu um Erro Interno");
         } catch (WriteException e){
             log.error("Erro em escrever no arquivo.", e.fillInStackTrace());
-            throw new InternalErrorException();
+            throw new ErrorException("Ocorreu um Erro Interno");
         }
     }
     
-    public void log2() throws InternalErrorException{
+    public void log2() throws ErrorException{
         try {
             
             Label label;
@@ -211,16 +217,16 @@ public class IssnException extends Exception{
                     
                 } catch (BiffException ex) {
                     log.error("Erro de Leitura do arquivo biff.", ex.fillInStackTrace());
-                    throw new InternalErrorException();
+                    throw new ErrorException("Ocorreu um Erro Interno");
                 }
             }
             
         } catch (IOException e) {
             log.error("Erro de E/S.", e.fillInStackTrace());
-            throw new InternalErrorException();
+            throw new ErrorException("Ocorreu um Erro Interno");
         } catch (WriteException e) {
             log.error("Erro em escrever no arquivo.", e.fillInStackTrace());
-            throw new InternalErrorException();
+            throw new ErrorException("Ocorreu um Erro Interno");
         }
     }
         
