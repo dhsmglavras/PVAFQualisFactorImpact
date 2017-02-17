@@ -90,11 +90,11 @@ public class JournalDAO {
             
             ps = conn.prepareStatement("SELECT id_pub_venue FROM publicationvenue ORDER BY id_pub_venue");
             int idPubVenue=0;
-            try (ResultSet publicationVenue = ps.executeQuery()) {
-                if(publicationVenue.last()){
-                    idPubVenue = publicationVenue.getInt("id_pub_venue");
-                }
-            }            
+            ResultSet publicationVenue = ps.executeQuery();
+            if(publicationVenue.last()){
+                idPubVenue = publicationVenue.getInt("id_pub_venue");
+            }
+            publicationVenue.close();
             ps.close();
             
             // Inserir issn válido
@@ -138,11 +138,11 @@ public class JournalDAO {
                     ps.close();
                     
                     ps = conn.prepareStatement("SELECT id_area FROM area_avaliacao ORDER BY id_area");
-                    try (ResultSet areaAvaliacao = ps.executeQuery()) {
-                        if(areaAvaliacao.last()){
-                            idArea = areaAvaliacao.getInt("id_area");                            
-                        }
-                    }            
+                    ResultSet areaAvaliacao = ps.executeQuery();
+                    if(areaAvaliacao.last()){
+                        idArea = areaAvaliacao.getInt("id_area");                            
+                    }
+                    areaAvaliacao.close();
                     ps.close();                    
                 }
                 
@@ -153,29 +153,31 @@ public class JournalDAO {
                 ps.setInt(i++, idArea);
                 ps.setBigDecimal(i++, BigDecimal.valueOf(journal.getYear()));
 
-                try (ResultSet tableQualis = ps.executeQuery()) {
-                    if (tableQualis.first()) {
-                        i = 1;
-                        ps = conn.prepareStatement("UPDATE qualis SET qualis = ? WHERE id_pub_venue = ? AND id_area = ? AND year = ?");
-                        ps.setString(i++, token[1]);
-                        ps.setInt(i++, idPubVenue);
-                        ps.setInt(i++, idArea);
-                        ps.setBigDecimal(i++, BigDecimal.valueOf(journal.getYear()));
-                        ps.executeUpdate();
-                        ps.close();
-                    } else {
-                        i = 1;
-                        ps = conn.prepareStatement("INSERT INTO qualis (id_pub_venue,id_area,year,qualis) VALUES (?,?,?,?)");
-                        ps.setInt(i++, idPubVenue);
-                        ps.setInt(i++, idArea);
-                        ps.setBigDecimal(i++, BigDecimal.valueOf(journal.getYear()));
-                        ps.setString(i++, token[1]);
-                        ps.executeUpdate();
-                        ps.close();
-                    }
+                ResultSet tableQualis = ps.executeQuery();
+                if (tableQualis.first()) {
+                    i = 1;
+                    ps = conn.prepareStatement("UPDATE qualis SET qualis = ? WHERE id_pub_venue = ? AND id_area = ? AND year = ?");
+                    ps.setString(i++, token[1]);
+                    ps.setInt(i++, idPubVenue);
+                    ps.setInt(i++, idArea);
+                    ps.setBigDecimal(i++, BigDecimal.valueOf(journal.getYear()));
+                    ps.executeUpdate();
+                    tableQualis.close();
+                    ps.close();
+                } else {
+                    i = 1;
+                    ps = conn.prepareStatement("INSERT INTO qualis (id_pub_venue,id_area,year,qualis) VALUES (?,?,?,?)");
+                    ps.setInt(i++, idPubVenue);
+                    ps.setInt(i++, idArea);
+                    ps.setBigDecimal(i++, BigDecimal.valueOf(journal.getYear()));
+                    ps.setString(i++, token[1]);
+                    ps.executeUpdate();
+                    tableQualis.close();
+                    ps.close();
                 }
-                ps.close();
             }
+            ps.close();
+            
                         
             // Inserir titulos            
             for(String journalTitle: journal.getTitles()){
@@ -230,11 +232,11 @@ public class JournalDAO {
             
             int idPubVenue = 0;
             
-            try(ResultSet issn = ps.executeQuery()){
-                if(issn.first()){
-                    idPubVenue = issn.getInt("id_pub_venue");
-                }
-            }           
+            ResultSet issn = ps.executeQuery();
+            if(issn.first()){
+                idPubVenue = issn.getInt("id_pub_venue");
+            }
+            issn.close();
             ps.close();
             
             // Inserir issn inválido
@@ -270,13 +272,12 @@ public class JournalDAO {
                     ps.close();
                     
                     ps = conn.prepareStatement("SELECT id_area FROM area_avaliacao ORDER BY id_area");
-                    try (ResultSet areaAvaliacao = ps.executeQuery()) {
-
-                        if (areaAvaliacao.last()) {
-                            idArea = areaAvaliacao.getInt("id_area");
-                        }
+                    ResultSet areaAvaliacao = ps.executeQuery();
+                    
+                    if (areaAvaliacao.last()) {
+                        idArea = areaAvaliacao.getInt("id_area");
                     }
-
+                    areaAvaliacao.close();
                     ps.close();
                 }
 
@@ -285,46 +286,43 @@ public class JournalDAO {
                 ps.setInt(i++, idPubVenue);
                 ps.setInt(i++, idArea);
                 ps.setBigDecimal(i++, BigDecimal.valueOf(journal.getYear()));
-                                
-                try (ResultSet tableQualis = ps.executeQuery()) {
-                    if (tableQualis.first()) {
-                        String qualis = tableQualis.getString("qualis");
-                        int indicePVAF = getIndice(qualis);
-                        int indiceNew = getIndice(token[1]);
-                        if(indicePVAF < indiceNew){
-                            i = 1;
-                            ps = conn.prepareStatement("UPDATE qualis SET qualis = ? WHERE id_pub_venue = ? AND id_area = ? AND year = ?");
-                            ps.setString(i++, token[1]);
-                            ps.setInt(i++, idPubVenue);
-                            ps.setInt(i++, idArea);
-                            ps.setBigDecimal(i++, BigDecimal.valueOf(journal.getYear()));
-                            ps.executeUpdate();
-                            ps.close();
-                        }
-                    } else {
+                
+                ResultSet tableQualis = ps.executeQuery();
+                if (tableQualis.first()) {
+                    String qualis = tableQualis.getString("qualis");
+                    int indicePVAF = getIndice(qualis);
+                    int indiceNew = getIndice(token[1]);
+                    if(indicePVAF < indiceNew){
                         i = 1;
-                        ps = conn.prepareStatement("INSERT INTO qualis (id_pub_venue,id_area,year,qualis) VALUES (?,?,?,?)");
+                        ps = conn.prepareStatement("UPDATE qualis SET qualis = ? WHERE id_pub_venue = ? AND id_area = ? AND year = ?");
+                        ps.setString(i++, token[1]);
                         ps.setInt(i++, idPubVenue);
                         ps.setInt(i++, idArea);
                         ps.setBigDecimal(i++, BigDecimal.valueOf(journal.getYear()));
-                        ps.setString(i++, token[1]);
                         ps.executeUpdate();
+                        tableQualis.close();
                         ps.close();
                     }
+                } else {
+                    i = 1;
+                    ps = conn.prepareStatement("INSERT INTO qualis (id_pub_venue,id_area,year,qualis) VALUES (?,?,?,?)");
+                    ps.setInt(i++, idPubVenue);
+                    ps.setInt(i++, idArea);
+                    ps.setBigDecimal(i++, BigDecimal.valueOf(journal.getYear()));
+                    ps.setString(i++, token[1]);
+                    ps.executeUpdate();
+                    tableQualis.close();
+                    ps.close();
                 }
-                ps.close();
             }
+                
+            ps.close();
+            
             
             for(String journalTitle: journal.getTitles()){
                 int idPubVenueAux;
                 
-                try{
-                    idPubVenueAux = TitleDAO.checkIdPubVenue(idPubVenue, journalTitle);
-                }finally{}
-                /*catch(ErrorException e){
-                    throw new ErrorException("Ocorreu um Erro Interno");
-                }*/
-                 
+                idPubVenueAux = TitleDAO.checkIdPubVenue(idPubVenue, journalTitle);
                 
                 if (idPubVenue != idPubVenueAux) {
                     i=1;

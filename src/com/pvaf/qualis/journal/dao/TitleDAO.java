@@ -32,13 +32,13 @@ public class TitleDAO {
             PreparedStatement ps = conn.prepareStatement("SELECT * FROM title WHERE id_pub_venue = ?")){
             ps.setInt(i++,idPubVenue);
             
-            try (ResultSet rs = ps.executeQuery()) {
-                Title title;
-                while(rs.next()){
-                    title = new Title(rs.getInt("id_pub_venue"),rs.getString("title"));
-                    listT.add(title);
-                }
+            ResultSet rs = ps.executeQuery();
+            Title title;
+            while(rs.next()){
+                title = new Title(rs.getInt("id_pub_venue"),rs.getString("title"));
+                listT.add(title);
             }
+            rs.close();
             
 	}catch(SQLException e){
             log.error("Ocorreu uma exceção de SQL.", e.fillInStackTrace());

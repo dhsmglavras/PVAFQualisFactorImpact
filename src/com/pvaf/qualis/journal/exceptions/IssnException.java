@@ -83,47 +83,38 @@ public class IssnException extends Exception{
 		planilha.close();
                 
             } else if(this.numero>1){
-                
-                try {
-                    
-                    Workbook arqExist = Workbook.getWorkbook(new File("registroErro.xls"));
-                    WritableWorkbook copyPlanilha = Workbook.createWorkbook(new File("registroErro.xls"),arqExist);
-                    
-                    WritableSheet aba = copyPlanilha.getSheet("Sheet1");
-                    WritableCell cell;
-                    
-                    int linha = numero;
-                    String atributos[] = this.line.split(";");
-                    
-                    label = new Label(0, linha, null);
-                    cell = (WritableCell) label;
-                    aba.addCell(cell);
+                Workbook arqExist = Workbook.getWorkbook(new File("registroErro.xls"));
+                WritableWorkbook copyPlanilha = Workbook.createWorkbook(new File("registroErro.xls"), arqExist);
 
-                    label = new Label(1, linha, atributos[0]);
-                    cell = (WritableCell) label;
-                    aba.addCell(cell);
+                WritableSheet aba = copyPlanilha.getSheet("Sheet1");
+                WritableCell cell;
 
-                    label = new Label(2, linha, atributos[1]);
-                    cell = (WritableCell) label;
-                    aba.addCell(cell);
+                int linha = numero;
+                String atributos[] = this.line.split(";");
 
-                    label = new Label(3, linha, atributos[2]);
-                    cell = (WritableCell) label;
-                    aba.addCell(cell);
+                label = new Label(0, linha, null);
+                cell = (WritableCell) label;
+                aba.addCell(cell);
 
-                    label = new Label(4, linha, atributos[3]);
-                    cell = (WritableCell) label;
-                    aba.addCell(cell);
-                    
-                    arqExist.close();
-                    copyPlanilha.write();
-                    copyPlanilha.close();
-                    
-                } catch (BiffException ex) {
-                    log.error("Erro de Leitura do arquivo biff.", ex.fillInStackTrace());
-                    throw new ErrorException("Ocorreu um Erro Interno");
-                    
-                }
+                label = new Label(1, linha, atributos[0]);
+                cell = (WritableCell) label;
+                aba.addCell(cell);
+
+                label = new Label(2, linha, atributos[1]);
+                cell = (WritableCell) label;
+                aba.addCell(cell);
+
+                label = new Label(3, linha, atributos[2]);
+                cell = (WritableCell) label;
+                aba.addCell(cell);
+
+                label = new Label(4, linha, atributos[3]);
+                cell = (WritableCell) label;
+                aba.addCell(cell);
+
+                arqExist.close();
+                copyPlanilha.write();
+                copyPlanilha.close();
             }
             
         } catch (IOException e) {
@@ -131,6 +122,9 @@ public class IssnException extends Exception{
             throw new ErrorException("Ocorreu um Erro Interno");
         } catch (WriteException e){
             log.error("Erro em escrever no arquivo.", e.fillInStackTrace());
+            throw new ErrorException("Ocorreu um Erro Interno");
+        } catch (BiffException ex) {
+            log.error("Erro de Leitura do arquivo biff.", ex.fillInStackTrace());
             throw new ErrorException("Ocorreu um Erro Interno");
         }
     }
@@ -179,46 +173,38 @@ public class IssnException extends Exception{
 		planilha.close();
                 
             } else if(this.numero>1){
-                
-                try {
-                    
-                    Workbook arqExist = Workbook.getWorkbook(new File("registroErro.xls"));
-                    WritableWorkbook copyPlanilha = Workbook.createWorkbook(new File("registroErro.xls"),arqExist);
-                    
-                    WritableSheet aba = copyPlanilha.getSheet("Sheet1");
-                    WritableCell cell;
-                    
-                    int linha = numero;
-                    String atributos[] = this.line.split(";");
-                    
-                    label = new Label(0, linha, atributos[0]);
-                    cell = (WritableCell) label;
-                    aba.addCell(cell);
-                    
-                    label = new Label(1, linha, atributos[1]);
-                    cell = (WritableCell) label;
-                    aba.addCell(cell);
+                Workbook arqExist = Workbook.getWorkbook(new File("registroErro.xls"));
+                WritableWorkbook copyPlanilha = Workbook.createWorkbook(new File("registroErro.xls"), arqExist);
 
-                    label = new Label(2, linha, atributos[2]);
-                    cell = (WritableCell) label;
-                    aba.addCell(cell);
+                WritableSheet aba = copyPlanilha.getSheet("Sheet1");
+                WritableCell cell;
 
-                    label = new Label(3, linha, atributos[3]);
-                    cell = (WritableCell) label;
-                    aba.addCell(cell);
+                int linha = numero;
+                String atributos[] = this.line.split(";");
 
-                    label = new Label(4, linha, atributos[4]);
-                    cell = (WritableCell) label;
-                    aba.addCell(cell);
-                    
-                    arqExist.close();
-                    copyPlanilha.write();
-                    copyPlanilha.close();
-                    
-                } catch (BiffException ex) {
-                    log.error("Erro de Leitura do arquivo biff.", ex.fillInStackTrace());
-                    throw new ErrorException("Ocorreu um Erro Interno");
-                }
+                label = new Label(0, linha, atributos[0]);
+                cell = (WritableCell) label;
+                aba.addCell(cell);
+
+                label = new Label(1, linha, atributos[1]);
+                cell = (WritableCell) label;
+                aba.addCell(cell);
+
+                label = new Label(2, linha, atributos[2]);
+                cell = (WritableCell) label;
+                aba.addCell(cell);
+
+                label = new Label(3, linha, atributos[3]);
+                cell = (WritableCell) label;
+                aba.addCell(cell);
+
+                label = new Label(4, linha, atributos[4]);
+                cell = (WritableCell) label;
+                aba.addCell(cell);
+
+                arqExist.close();
+                copyPlanilha.write();
+                copyPlanilha.close();
             }
             
         } catch (IOException e) {
@@ -226,6 +212,9 @@ public class IssnException extends Exception{
             throw new ErrorException("Ocorreu um Erro Interno");
         } catch (WriteException e) {
             log.error("Erro em escrever no arquivo.", e.fillInStackTrace());
+            throw new ErrorException("Ocorreu um Erro Interno");
+        } catch (BiffException ex) {
+            log.error("Erro de Leitura do arquivo biff.", ex.fillInStackTrace());
             throw new ErrorException("Ocorreu um Erro Interno");
         }
     }

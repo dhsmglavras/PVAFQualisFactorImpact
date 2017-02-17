@@ -48,19 +48,14 @@ public class IssnDAO {
                 String pub_type = publicationvenue.getString("pub_type");
                 
                 if (pub_type.equals("J") || pub_type.equals("M")){
-                    try{
-                        statement = conn.createStatement();
-                        issn = statement.executeQuery("select * from issn where id_pub_venue = " + idPubVenue + " order by issn");
+                    statement = conn.createStatement();
+                    issn = statement.executeQuery("select * from issn where id_pub_venue = " + idPubVenue + " order by issn");
                         
-                        while(issn.next()){
-                            issns.add(issn.getString("issn"));
-                        }
-                        
-                        statement.close();
-                    } catch(SQLException sePublication){
-                        log.error("Ocorreu uma exceção de SQL.", sePublication.fillInStackTrace());
-                        throw new ErrorException("Ocorreu um Erro Interno");
+                    while(issn.next()){
+                        issns.add(issn.getString("issn"));
                     }
+                        
+                    statement.close();
                 }
                 
             }while(publicationvenue.next());            
@@ -98,18 +93,13 @@ public class IssnDAO {
                 String pub_type = publicationvenue.getString("pub_type");
                 
                 if (pub_type.equals("J")|| pub_type.equals("M")){
-                    try{
-                        statement = conn.createStatement();
-                        issnRs = statement.executeQuery("select * from issn where id_pub_venue = " + idPubVenue + " order by issn");
+                    statement = conn.createStatement();
+                    issnRs = statement.executeQuery("select * from issn where id_pub_venue = " + idPubVenue + " order by issn");
                         
-                        Issn issn;
-                        while(issnRs.next()){
-                            issn = new Issn(issnRs.getInt("id_pub_venue"),issnRs.getString("issn"),issnRs.getString("print/online"));
-                            issns.add(issn);
-                        }
-                    } catch(SQLException sePublication){
-                        log.error("Ocorreu uma exceção de SQL.", sePublication.fillInStackTrace());
-                        throw new ErrorException("Ocorreu um Erro Interno");
+                    Issn issn;
+                    while(issnRs.next()){
+                        issn = new Issn(issnRs.getInt("id_pub_venue"),issnRs.getString("issn"),issnRs.getString("print/online"));
+                        issns.add(issn);
                     }
                 }
             }
@@ -135,11 +125,11 @@ public class IssnDAO {
         try(Connection conn = DBLocator.getConnection(); 
             PreparedStatement ps = conn.prepareStatement("SELECT * FROM issn WHERE issn = ?")){
             ps.setString(i++,issn);
-            try (ResultSet rs = ps.executeQuery()) {
-                if(rs.first()){
-                    return true;
-                }  
-            }
+            ResultSet rs = ps.executeQuery();
+            if(rs.first()){
+                return true;
+            }  
+            
 	}catch(SQLException e){
             log.error("Ocorreu uma exceção de SQL.", e.fillInStackTrace());
             throw new ErrorException("Ocorreu um Erro Interno");
