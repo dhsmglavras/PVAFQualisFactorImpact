@@ -64,6 +64,10 @@ public class ReadQualisJournal {
                 int linhas = sheet.getRows();
 
                 Cell cell = sheet.findCell("ISSN");
+                
+                if(cell==null){
+                    throw new ErrorException("Verifique se o arquivo está configurado corretamente");
+                }
 
                 cell.getRow();
                 
@@ -130,6 +134,10 @@ public class ReadQualisJournal {
                 int linhas = sheet.getRows();
 
                 Cell cell = sheet.findCell("ISSN");
+                
+                if(cell==null){
+                    throw new ErrorException("Verifique se o arquivo está configurado corretamente");
+                }
 
                 cell.getRow();
 
