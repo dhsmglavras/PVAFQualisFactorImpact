@@ -63,22 +63,28 @@ public class ReadQualisJournal {
 
                 int linhas = sheet.getRows();
 
-                Cell cell = sheet.findCell("ISSN");
-                
-                if(cell==null){
+                Cell cellISSN = sheet.findCell("ISSN");
+                Cell cellTitulo = sheet.findCell("Título");
+                Cell cellAreaAvaliacao = sheet.findCell("Área de Avaliação");
+                Cell cellEstrato = sheet.findCell("Estrato");
+                                
+                if(cellISSN==null || cellTitulo==null || cellAreaAvaliacao==null || cellEstrato==null){
                     throw new ErrorException("Verifique se o arquivo está configurado corretamente");
                 }
 
-                cell.getRow();
+                cellISSN.getRow();
                 
-                for (int i = cell.getRow() + 1; i < linhas; i++) {
+                for (int i = cellISSN.getRow() + 1; i < linhas; i++) {
                     
-                    int column = cell.getColumn();
+                    int columnISSN = cellISSN.getColumn();
+                    int columnTitulo = cellTitulo.getColumn();
+                    int columnAreaAvaliacao = cellAreaAvaliacao.getColumn();
+                    int columnEstrato = cellEstrato.getColumn();
                 
-                    Cell a1 = sheet.getCell(column++, i);
-                    Cell a2 = sheet.getCell(column++, i);
-                    Cell a3 = sheet.getCell(column++, i);
-                    Cell a4 = sheet.getCell(column++, i);
+                    Cell a1 = sheet.getCell(columnISSN, i);
+                    Cell a2 = sheet.getCell(columnTitulo, i);
+                    Cell a3 = sheet.getCell(columnAreaAvaliacao, i);
+                    Cell a4 = sheet.getCell(columnEstrato, i);
                 
                     byte array[] = a1.getContents().getBytes("UTF-8");
                     String issn = new String(array,"UTF-8");
@@ -101,6 +107,7 @@ public class ReadQualisJournal {
                     classification = classification.trim();
                     
                     String line = issn+";"+title+";"+area+";"+classification;
+                    //System.out.println(line);
                     journalsQualis.add(line);
                 }
             }
@@ -133,23 +140,31 @@ public class ReadQualisJournal {
 
                 int linhas = sheet.getRows();
 
-                Cell cell = sheet.findCell("ISSN");
-                
-                if(cell==null){
+                Cell cellISSN = sheet.findCell("ISSN");
+                Cell cellISSNInvalido = sheet.findCell("ISSN Inválido");
+                Cell cellTitulo = sheet.findCell("Título");
+                Cell cellAreaAvaliacao = sheet.findCell("Área de Avaliação");
+                Cell cellEstrato = sheet.findCell("Estrato");
+
+                if (cellISSN == null || cellISSNInvalido==null ||cellTitulo == null || cellAreaAvaliacao == null || cellEstrato == null) {
                     throw new ErrorException("Verifique se o arquivo está configurado corretamente");
                 }
 
-                cell.getRow();
+                cellISSN.getRow();
 
-                for (int i = cell.getRow() + 1; i < linhas; i++) {
-                    
-                    int column = cell.getColumn();
-                
-                    Cell a1 = sheet.getCell(column++, i);
-                    Cell a2 = sheet.getCell(column++, i);
-                    Cell a3 = sheet.getCell(column++, i);
-                    Cell a4 = sheet.getCell(column++, i);
-                    Cell a5 = sheet.getCell(column++, i);
+                for (int i = cellISSN.getRow() + 1; i < linhas; i++) {
+
+                    int columnISSN = cellISSN.getColumn();
+                    int columnISSNInvalido = cellISSNInvalido.getColumn();
+                    int columnTitulo = cellTitulo.getColumn();
+                    int columnAreaAvaliacao = cellAreaAvaliacao.getColumn();
+                    int columnEstrato = cellEstrato.getColumn();
+
+                    Cell a1 = sheet.getCell(columnISSN, i);
+                    Cell a2 = sheet.getCell(columnISSNInvalido, i);
+                    Cell a3 = sheet.getCell(columnTitulo, i);
+                    Cell a4 = sheet.getCell(columnAreaAvaliacao, i);
+                    Cell a5 = sheet.getCell(columnEstrato, i);
                 
                     byte array[] = a1.getContents().getBytes("UTF-8");
                     String issn = new String(array,"UTF-8");
@@ -178,6 +193,7 @@ public class ReadQualisJournal {
                     classification = classification.trim();
                     
                     String line = issn+";"+issnInvalid+";"+title+";"+area+";"+classification;
+                    //System.out.println(line);
                     journalsQualis.add(line);
                 }
             }

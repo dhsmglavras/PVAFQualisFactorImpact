@@ -49,10 +49,10 @@ public class IssnException extends Exception{
 
                 String cabecalho[] = new String[5];
                 cabecalho[0] = "ISSN";
-                cabecalho[1] = "ISSN Invalido";
+                cabecalho[1] = "ISSN Inválido";
                 cabecalho[2] = "Título";
                 cabecalho[3] = "Área de Avaliação";
-                cabecalho[4] = "Classificação";
+                cabecalho[4] = "Estrato";
                 
                 for (int i = 0; i < cabecalho.length; i++) {
                     label = new Label(i, 0, cabecalho[i]);
@@ -140,10 +140,10 @@ public class IssnException extends Exception{
 
                 String cabecalho[] = new String[5];
                 cabecalho[0] = "ISSN";
-                cabecalho[1] = "ISSN Invalido";
+                cabecalho[1] = "ISSN Inválido";
                 cabecalho[2] = "Título";
                 cabecalho[3] = "Área de Avaliação";
-                cabecalho[4] = "Classificação";
+                cabecalho[4] = "Estrato";
                 
                 for (int i = 0; i < cabecalho.length; i++) {
                     label = new Label(i, 0, cabecalho[i]);

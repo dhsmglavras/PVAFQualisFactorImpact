@@ -69,7 +69,7 @@ public class AppQualisJournal {
         List<QualisJournal> qualisJournals = new ArrayList<>();
         
         if(op==1){
-        
+            int test = 0;        
             for(String q: qualisJournal){
                 String[] token = q.split(";");
                         
@@ -91,11 +91,18 @@ public class AppQualisJournal {
                         throw new IssnException(q);
                     } catch (IssnException e) {
                         e.log();
+                    }finally{
+                        test++;
                     }
+                }
+                
+                if(test==0){
+                    AppQualisJournal.deleteFile("registroErro.xls");
                 }
             }
             
         }else{
+            int test =0;
             for(String q: qualisJournal){
                 
                 String[] token = q.split(";");
@@ -118,7 +125,14 @@ public class AppQualisJournal {
                         throw new IssnException(q);
                     }catch (IssnException e) {
                         e.log2();
+                    }finally{
+                        test++;
                     }
+                }
+                
+                if(test==0){
+                    AppQualisJournal.deleteFile("registroErro.xls");
+                
                 }
             }
         }
@@ -341,6 +355,7 @@ public class AppQualisJournal {
                     throw new IssnException();
                 } catch (IssnException e) {
                     System.err.println(e.getMessage());
+                    
                 }
             }
         } catch (ErrorException ex) {
