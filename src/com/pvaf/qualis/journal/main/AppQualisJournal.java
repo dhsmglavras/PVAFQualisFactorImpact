@@ -246,6 +246,8 @@ public class AppQualisJournal {
      */
     public static void main(String[] args) {
         
+        long init =0; long end=0; long diff=0;
+        
         try {
             System.out.println("Opções");
             System.out.println("1 journal Qualis");
@@ -257,6 +259,9 @@ public class AppQualisJournal {
             switch(op){
                 
                 case 1:
+                    
+                    init = System.currentTimeMillis();
+                    
                     AppQualisJournal.deleteFile("registroErro.xls");
                     
                     Set<String> setJournalsQualis = AppQualisJournal.lerQualis("qualis-journal-todas-as-areas-2015.xls",op);
@@ -303,6 +308,8 @@ public class AppQualisJournal {
                     break;
                     
                 case 2:
+                    
+                    init = System.currentTimeMillis();
                     
                     setJournalsQualis = AppQualisJournal.lerQualis("registroErro.xls",op);
                     
@@ -358,9 +365,15 @@ public class AppQualisJournal {
                     
                 }
             }
+            
+            end = System.currentTimeMillis();
+            
         } catch (ErrorException ex) {
             System.err.println(ex.getMessage());
         }
+        
+        diff = end - init; 
+        System.out.println("Demorou " + (double)(diff / 1000) + " segundos");                 
     }
     
     private static class CompararJournalsTitulos implements Comparator<QualisJournal>{      
